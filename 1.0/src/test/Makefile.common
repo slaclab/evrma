@@ -1,0 +1,66 @@
+### NOTE: SETTABLE_CONFIG
+KERNEL_MODULE_EVRMA=../../../evrmaDriver/src
+
+### NOTE: SETTABLE_CONFIG
+EVRMA=../../../evrma/1.0/rhel6-linux-x86_64
+
+SRC_TEST_DIR := ../src/test
+
+#CC=gcc
+
+CC=$(XCROSS_HOME)g++
+
+CXXFLAGS := -Wall -fPIC -O3
+CPPFLAGS := -I$(KERNEL_MODULE_EVRMA)
+CPPFLAGS += -I$(EVRMA)/include
+CPPFLAGS += -I$(SRC_DIR)
+
+LDFLAGS +=  -L. -L$(EVRMA)/lib
+LDLIBS  +=  -lstdc++ -lpthread -lrt -lm -levrma -levrma_dbg
+
+CLEANEXTS   = o a d
+
+# source files.
+SRC_TEST1 =     main_virt_dev.cpp
+SRC_TEST2 =     main_virt_dev2.cpp
+SRC_TEST3 =     main_virt_dev3.cpp
+
+VDEV_TEST1=test_virt_dev
+VDEV_TEST2=test_virt_dev2
+VDEV_TEST3=test_virt_dev3
+INSTALL_BIN_DIR  = bin
+
+# Default target
+.PHONY:	all
+all:	$(VDEV_TEST1) $(VDEV_TEST2) $(VDEV_TEST3)
+
+$(VDEV_TEST1): $(patsubst %.cpp,%.o,$(SRC_TEST1))
+	@$(CC) $(patsubst %.cpp,%.o,$(SRC_TEST1)) $(LDFLAGS) $(LDLIBS) -o $(VDEV_TEST1)
+	@echo "  LD   " $@
+
+$(VDEV_TEST2): $(patsubst %.cpp,%.o,$(SRC_TEST2))
+	@$(CC) $(patsubst %.cpp,%.o,$(SRC_TEST2)) $(LDFLAGS) $(LDLIBS) -o $(VDEV_TEST2)
+	@echo "  LD   " $@
+
+$(VDEV_TEST3): $(patsubst %.cpp,%.o,$(SRC_TEST3))
+	@$(CC) $(patsubst %.cpp,%.o,$(SRC_TEST3)) $(LDFLAGS) $(LDLIBS) -o $(VDEV_TEST3)
+	@echo "  LD   " $@
+
+
+.PHONY:	install
+install:
+	mkdir -p $(INSTALL_BIN_DIR)
+	cp -p $(VDEV_TEST1) $(VDEV_TEST2) $(VDEV_TEST3) $(INSTALL_BIN_DIR)
+
+.PHONY:	clean 
+clean:
+	for file in $(CLEANEXTS); do rm -f *.$$file; done
+	-rm $(VDEV_TEST1) $(VDEV_TEST2) $(VDEV_TEST3)
+
+.SUFFIXES: .cpp .o
+
+%.o : $(SRC_TEST_DIR)/%.cpp  
+	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -MD -o $@ $<
+
+
+

@@ -1,0 +1,63 @@
+### NOTE: SETTABLE_CONFIG
+KERNEL_MODULE_EVRMA=../../../evrmaDriver/src
+
+SRC_LIB_DIR := ../src/lib
+
+#CC=gcc
+
+CC=$(XCROSS_HOME)g++
+
+CXXFLAGS := -Wall -fPIC -O3
+CPPFLAGS := -I$(KERNEL_MODULE_EVRMA)
+CPPFLAGS += -I$(SRC_DIR)
+
+LDFLAGS +=  -L.
+LDLIBS  +=  -lstdc++ -lpthread -lrt -lm
+
+CLEANEXTS   = o a d
+
+# source files.
+SRC =     libevrma.cpp utils.cpp
+SRC_DBG = libevrma.cpp libevrma_dbg.cpp utils.cpp
+
+LIBRARY=libevrma.a
+LIBRARY_DEBUG=libevrma_dbg.a
+INSTALL_BIN_DIR  = bin
+INSTALL_LIB_DIR  = lib
+INSTALL_INC_DIR  = include
+EVRMA_INTERFACE  = $(SRC_LIB_DIR)/libevrma.h $(SRC_LIB_DIR)/libevrma_dbg.h
+
+# Default target
+.PHONY:	all
+all:	$(LIBRARY) $(LIBRARY_DEBUG)
+
+# Build libevrma.a from SRC files
+$(LIBRARY): $(patsubst %.cpp,%.o,$(SRC))
+	ar ru $@ $^
+	ranlib $@
+	
+# Build libevrma_dbg.a from SRC_DBG files
+$(LIBRARY_DEBUG): $(patsubst %.cpp,%.o,$(SRC_DBG))
+	ar ru $@ $^
+	ranlib $@
+
+
+.PHONY:	install
+install:
+	mkdir -p $(INSTALL_LIB_DIR)
+	mkdir -p $(INSTALL_INC_DIR)
+	cp -p $(LIBRARY) $(INSTALL_LIB_DIR)
+	cp -p $(LIBRARY_DEBUG) $(INSTALL_LIB_DIR)
+	cp -p $(EVRMA_INTERFACE) $(INSTALL_INC_DIR)
+
+.PHONY:	clean 
+clean:
+	for file in $(CLEANEXTS); do rm -f *.$$file; done
+
+.SUFFIXES: .cpp .o
+
+%.o : $(SRC_LIB_DIR)/%.cpp  
+	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -MD -o $@ $<
+
+
+
