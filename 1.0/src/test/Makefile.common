@@ -1,5 +1,5 @@
 ### NOTE: SETTABLE_CONFIG
-KERNEL_MODULE_EVRMA=../../../evrmaDriver/src
+KERNEL_MODULE_EVRMA=../../../evrmaDriver
 
 ### NOTE: SETTABLE_CONFIG
 EVRMA=../../../evrma/1.0/rhel6-linux-x86_64
@@ -11,7 +11,7 @@ SRC_TEST_DIR := ../src/test
 CC=$(XCROSS_HOME)g++
 
 CXXFLAGS := -Wall -fPIC -O3
-CPPFLAGS := -I$(KERNEL_MODULE_EVRMA)
+CPPFLAGS := -I$(KERNEL_MODULE_EVRMA)/src
 CPPFLAGS += -I$(EVRMA)/include
 CPPFLAGS += -I$(SRC_DIR)
 
