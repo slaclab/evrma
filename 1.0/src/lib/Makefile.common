@@ -3,8 +3,6 @@ XCROSS_HOME ?=
 
 SRC_LIB_DIR := ../src/lib
 
-#CC=gcc
-
 CC=$(XCROSS_HOME)g++
 
 CXXFLAGS := -Wall -fPIC -O3
@@ -63,6 +61,7 @@ uninstall:
 .PHONY:	clean 
 clean:
 	for file in $(CLEANEXTS); do rm -f *.$$file; done
+	-rm $(LIBRARY) $(LIBRARY_DEBUG) 
 
 .SUFFIXES: .cpp .o
 

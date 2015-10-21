@@ -3,8 +3,6 @@ XCROSS_HOME ?=
 
 SRC_TEST_DIR := ../src/test
 
-#CC=gcc
-
 CC=$(XCROSS_HOME)g++
 
 CXXFLAGS := -Wall -fPIC -O3

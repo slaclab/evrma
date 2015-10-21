@@ -1,10 +1,13 @@
 Editing
 =========
 
-The following variables should be changed to match your system configuration:
+The following variables should or can be changed to match your system configuration:
 
 - KERNEL_MODULE_EVRMA in Makefile.common at src/ should point
   to the evrmaDriver directory.
+  
+- INSTALL_LOCATION in Makefile at build-buildroot-2014.08-x86_64 and
+  build-rhel6-linux-x86_64 define the path where the installed files will reside.
   
 Building
 ==========
@@ -13,9 +16,5 @@ Change dir to build-xxx and type:
 
 	make [target] [INSTALL_LOCATION=path_to_location] [KERNEL_MODULE_EVRMA=path_to_kernel]
 	
-NOTES:
-
-- The INSTALL_LOCATION defines the path where the installed files will reside.
-
-- Setting KERNEL_MODULE_EVRMA is alternative to hardcoded change in the 
-  Makefile.common at src/.
+Note that this enables an alternative way of setting INSTALL_LOCATION and
+KERNEL_MODULE_EVRMA.
