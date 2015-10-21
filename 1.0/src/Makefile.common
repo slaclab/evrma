@@ -1,0 +1,27 @@
+### NOTE: SETTABLE_CONFIG
+KERNEL_MODULE_EVRMA ?= ../../../evrmaDriver
+
+all: compile_lib install_lib compile_test
+
+clean:
+	make -f Makefile.lib clean
+	make -f Makefile.test clean
+
+install: install_lib install_test
+
+uninstall:
+	make -f Makefile.lib  uninstall  INSTALL_LOCATION="$(INSTALL_LOCATION)"
+	make -f Makefile.test uninstall  INSTALL_LOCATION="$(INSTALL_LOCATION)"
+
+compile_lib:
+	make -f Makefile.lib  KERNEL_MODULE_EVRMA="$(KERNEL_MODULE_EVRMA)"
+
+compile_test:
+	make -f Makefile.test KERNEL_MODULE_EVRMA="$(KERNEL_MODULE_EVRMA)" EVRMA="$(INSTALL_LOCATION)"
+
+install_lib: compile_lib
+	make -f Makefile.lib  install  INSTALL_LOCATION="$(INSTALL_LOCATION)"
+	
+install_test: compile_test
+	make -f Makefile.test install  INSTALL_LOCATION="$(INSTALL_LOCATION)"
+

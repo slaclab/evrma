@@ -15,6 +15,8 @@
 #define ADBG(FORMAT, ...) printf("ADBG: " FORMAT "\n", ## __VA_ARGS__)
 #define AERR(FORMAT, ...) printf("ERROR: " FORMAT "\n", ## __VA_ARGS__)
 
+#define IGNORE_RETVAL(CMD) if(CMD);
+
 #include "libevrma.h"
 #include "libevrma_dbg.h"
 
@@ -63,8 +65,6 @@ void unblockThread(EvrmaSession session)
 
 bool test2(EvrmaSession session1, EvrmaSession session2)
 {
-	int res;
-	
 	ADBG("test2 1");
 	
 	unblockThread(session1);
@@ -75,7 +75,7 @@ bool test2(EvrmaSession session1, EvrmaSession session2)
 	
 	ADBG("test2 3");
 	
-	system("echo i134444444444444488 > " DBG_SYS); // this will go through for 3
+	IGNORE_RETVAL(system("echo i134444444444444488 > " DBG_SYS)); // this will go through for 3
 	std::string part1 = "130000004444444444444488";
 	
 	evrmaUnsubscribeAll(session1);
@@ -87,11 +87,11 @@ bool test2(EvrmaSession session1, EvrmaSession session2)
 	ADBG("test2 5");
 	
 	// this will go through for 3 and 6
-	res = system("echo i144544444444444488 > " DBG_SYS);
+	IGNORE_RETVAL(system("echo i144544444444444488 > " DBG_SYS));
 	std::string part2 = "140000004544444444444488";
 
 	// this will go through for 6
-	res = system("echo i134644444444444488 > " DBG_SYS);
+	IGNORE_RETVAL(system("echo i134644444444444488 > " DBG_SYS));
 	std::string part2a = "130000004644444444444488";
 
 	ADBG("test2 8");
@@ -102,13 +102,13 @@ bool test2(EvrmaSession session1, EvrmaSession session2)
 	evrmaSubscribe(session1, 20);
 
 	// this will go through for 3
-	res = system("echo i144711223344554433 > " DBG_SYS);
+	IGNORE_RETVAL(system("echo i144711223344554433 > " DBG_SYS));
 	std::string part3 = "140000004711223344554433";
 
 	ADBG("test2 11");
 	
 	// this will go through for 3
-	res = system("echo i134844444444444488 > " DBG_SYS);
+	IGNORE_RETVAL(system("echo i134844444444444488 > " DBG_SYS));
 	std::string part4 = "130000004844444444444488";
 	
 	usleep(500*1000);
@@ -138,13 +138,11 @@ bool test2(EvrmaSession session1, EvrmaSession session2)
 
 bool test2c(EvrmaSession session1)
 {
-	int res;
-	
 	unblockThread(session1);
 
 	evrmaUnsubscribeAll(session1);
 	evrmaSubscribe(session1, 0x101);
-	res = system("echo n101 > " DBG_SYS);
+	IGNORE_RETVAL(system("echo n101 > " DBG_SYS));
 	
 	usleep(500*1000);
 	
@@ -160,18 +158,16 @@ bool test2c(EvrmaSession session1)
 
 bool test2d(EvrmaSession session1)
 {
-	int res;
-	
 	evrmaUnsubscribeAll(session1);
 	evrmaSubscribe(session1, 0x100);
 	evrmaSubscribe(session1, 0x101);
 	evrmaSubscribe(session1, 0x102);
 	evrmaSubscribe(session1, 0x103);
 
-	res = system("echo n101 > " DBG_SYS);
-	res = system("echo n101 > " DBG_SYS);
-	res = system("echo n103 > " DBG_SYS);
-	res = system("echo n100 > " DBG_SYS);
+	IGNORE_RETVAL(system("echo n101 > " DBG_SYS));
+	IGNORE_RETVAL(system("echo n101 > " DBG_SYS));
+	IGNORE_RETVAL(system("echo n103 > " DBG_SYS));
+	IGNORE_RETVAL(system("echo n100 > " DBG_SYS));
 	
 	// only unblock now so we can see the joined events
 	unblockThread(session1);

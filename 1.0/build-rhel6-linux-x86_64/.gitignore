@@ -1,0 +1,7 @@
+*.a
+*.d
+*.o
+test_virt_dev
+test_virt_dev2
+test_virt_dev3
+

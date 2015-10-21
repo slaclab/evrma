@@ -1,5 +1,5 @@
-### NOTE: SETTABLE_CONFIG
-KERNEL_MODULE_EVRMA=../../../evrmaDriver
+# Can be overriden by the including Makefile
+XCROSS_HOME ?= 
 
 SRC_LIB_DIR := ../src/lib
 
@@ -9,7 +9,7 @@ CC=$(XCROSS_HOME)g++
 
 CXXFLAGS := -Wall -fPIC -O3
 CPPFLAGS := -I$(KERNEL_MODULE_EVRMA)/src
-CPPFLAGS += -I$(SRC_DIR)
+CPPFLAGS += -I$(SRC_LIB_DIR)
 
 LDFLAGS +=  -L.
 LDLIBS  +=  -lstdc++ -lpthread -lrt -lm
@@ -26,6 +26,7 @@ INSTALL_BIN_DIR  = bin
 INSTALL_LIB_DIR  = lib
 INSTALL_INC_DIR  = include
 EVRMA_INTERFACE  = $(SRC_LIB_DIR)/libevrma.h $(SRC_LIB_DIR)/libevrma_dbg.h
+EVRMA_INTERFACE_BARE  = libevrma.h libevrma_dbg.h
 
 # Default target
 .PHONY:	all
@@ -44,11 +45,20 @@ $(LIBRARY_DEBUG): $(patsubst %.cpp,%.o,$(SRC_DBG))
 
 .PHONY:	install
 install:
-	mkdir -p $(INSTALL_LIB_DIR)
-	mkdir -p $(INSTALL_INC_DIR)
-	cp -p $(LIBRARY) $(INSTALL_LIB_DIR)
-	cp -p $(LIBRARY_DEBUG) $(INSTALL_LIB_DIR)
-	cp -p $(EVRMA_INTERFACE) $(INSTALL_INC_DIR)
+	mkdir -p $(INSTALL_LOCATION)/$(INSTALL_LIB_DIR)
+	mkdir -p $(INSTALL_LOCATION)/$(INSTALL_INC_DIR)
+	cp -p $(LIBRARY) $(INSTALL_LOCATION)/$(INSTALL_LIB_DIR)
+	cp -p $(LIBRARY_DEBUG) $(INSTALL_LOCATION)/$(INSTALL_LIB_DIR)
+	cp -p $(EVRMA_INTERFACE) $(INSTALL_LOCATION)/$(INSTALL_INC_DIR)
+
+.PHONY:	uninstall
+uninstall:
+	-cd $(INSTALL_LOCATION)/$(INSTALL_LIB_DIR); \
+		rm $(LIBRARY) $(LIBRARY_DEBUG)
+		
+	-cd $(INSTALL_LOCATION)/$(INSTALL_INC_DIR); \
+		rm $(EVRMA_INTERFACE_BARE) 
+
 
 .PHONY:	clean 
 clean:

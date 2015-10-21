@@ -16,6 +16,8 @@
 #define AERR(FORMAT, ...) printf("ERROR: " FORMAT "\n", ## __VA_ARGS__)
 #define AMARK(FORMAT, ...) printf(FORMAT, ## __VA_ARGS__)
 
+#define IGNORE_RETVAL(CMD) if(CMD);
+
 #include "linux-evrma.h"
 #include "libevrma.h"
 #include "libevrma_dbg.h"
@@ -212,8 +214,8 @@ public:
 	
 	int strange140, strange9, strange10_20_30, strange40, strange41;
 	
-	int lastEvent;
 	int lastRedrawCounter;
+	int lastEvent;
 	
 	TimeSlot timeSlot;
 	
@@ -514,7 +516,7 @@ LEnd1:
 #endif
 												"/_result_.tmp", prescaler, delay, width);
 			ADBG("System: %s", b);
-			system(b);
+			IGNORE_RETVAL(system(b));
 			
 		} else {
 			AERR("unknown pulsegen command: %s", pulsegenCommand.c_str());

@@ -1,8 +1,5 @@
-### NOTE: SETTABLE_CONFIG
-KERNEL_MODULE_EVRMA=../../../evrmaDriver
-
-### NOTE: SETTABLE_CONFIG
-EVRMA=../../../evrma/1.0/rhel6-linux-x86_64
+# Can be overriden by the including Makefile
+XCROSS_HOME ?= 
 
 SRC_TEST_DIR := ../src/test
 
@@ -13,7 +10,7 @@ CC=$(XCROSS_HOME)g++
 CXXFLAGS := -Wall -fPIC -O3
 CPPFLAGS := -I$(KERNEL_MODULE_EVRMA)/src
 CPPFLAGS += -I$(EVRMA)/include
-CPPFLAGS += -I$(SRC_DIR)
+CPPFLAGS += -I$(SRC_TEST_DIR)
 
 LDFLAGS +=  -L. -L$(EVRMA)/lib
 LDLIBS  +=  -lstdc++ -lpthread -lrt -lm -levrma -levrma_dbg
@@ -49,8 +46,13 @@ $(VDEV_TEST3): $(patsubst %.cpp,%.o,$(SRC_TEST3))
 
 .PHONY:	install
 install:
-	mkdir -p $(INSTALL_BIN_DIR)
-	cp -p $(VDEV_TEST1) $(VDEV_TEST2) $(VDEV_TEST3) $(INSTALL_BIN_DIR)
+	mkdir -p $(INSTALL_LOCATION)/$(INSTALL_BIN_DIR)
+	cp -p $(VDEV_TEST1) $(VDEV_TEST2) $(VDEV_TEST3) $(INSTALL_LOCATION)/$(INSTALL_BIN_DIR)
+
+.PHONY:	uninstall
+uninstall:
+	-cd $(INSTALL_LOCATION)/$(INSTALL_BIN_DIR); \
+		rm $(VDEV_TEST1) $(VDEV_TEST2) $(VDEV_TEST3) 
 
 .PHONY:	clean 
 clean:
