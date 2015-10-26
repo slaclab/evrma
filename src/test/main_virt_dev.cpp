@@ -22,7 +22,6 @@
 #include "libevrma.h"
 #include "libevrma_dbg.h"
 
-
 namespace {
 	
 #ifdef NON_SLAC_TEST_MACHINE
@@ -284,7 +283,7 @@ void evrmaCallback(EvrmaSession session, void *arg, int event, uint8_t *data, in
 			} else if(dbufLength != 52) {
 				ADBG("DBUF: not 52 bytes");
 			} else {
-				ADBG("DBUF: %5.6lf\t%s\t OK", nowMonotonic(), sd.c_str());
+// 				ADBG("DBUF: %5.6lf\t%s\t OK", nowMonotonic(), sd.c_str());
 				fiducial.addEvent(EVRMA_EVENT_DBUF_DATA);
 			}
 			
@@ -523,7 +522,7 @@ LEnd1:
 			goto LEnd2;
 		}
 
-	} else if(cmd == "test7") {
+	} else if(cmd == "test_subscribe_to_special_events_and_wait") {
 		
 		evrmaUnsubscribeAll(session);
 		evrmaSubscribe(session, EVRMA_EVENT_ERROR_TAXI);
@@ -542,6 +541,7 @@ LEnd1:
 		evrmaSubscribe(session, 0x7d);
 		evrmaSubscribe(session, 0x8c);
 
+		// leave device open for 10 seconds to be able to monitor the state
 		while(true) sleep(10);
 		
 	} else if(cmd == "testl") { // test in lib

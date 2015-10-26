@@ -15,11 +15,9 @@ LDLIBS  +=  -lstdc++ -lpthread -lrt -lm
 CLEANEXTS   = o a d
 
 # source files.
-SRC =     libevrma.cpp utils.cpp
-SRC_DBG = libevrma.cpp libevrma_dbg.cpp utils.cpp
+SRC = libevrma.cpp libevrma_dbg.cpp utils.cpp
 
 LIBRARY=libevrma.a
-LIBRARY_DEBUG=libevrma_dbg.a
 INSTALL_BIN_DIR  = bin
 INSTALL_LIB_DIR  = lib
 INSTALL_INC_DIR  = include
@@ -28,31 +26,24 @@ EVRMA_INTERFACE_BARE  = libevrma.h libevrma_dbg.h
 
 # Default target
 .PHONY:	all
-all:	$(LIBRARY) $(LIBRARY_DEBUG)
+all:	$(LIBRARY)
 
 # Build libevrma.a from SRC files
 $(LIBRARY): $(patsubst %.cpp,%.o,$(SRC))
 	ar ru $@ $^
 	ranlib $@
 	
-# Build libevrma_dbg.a from SRC_DBG files
-$(LIBRARY_DEBUG): $(patsubst %.cpp,%.o,$(SRC_DBG))
-	ar ru $@ $^
-	ranlib $@
-
-
 .PHONY:	install
 install:
 	mkdir -p $(INSTALL_LOCATION)/$(INSTALL_LIB_DIR)
 	mkdir -p $(INSTALL_LOCATION)/$(INSTALL_INC_DIR)
 	cp -p $(LIBRARY) $(INSTALL_LOCATION)/$(INSTALL_LIB_DIR)
-	cp -p $(LIBRARY_DEBUG) $(INSTALL_LOCATION)/$(INSTALL_LIB_DIR)
 	cp -p $(EVRMA_INTERFACE) $(INSTALL_LOCATION)/$(INSTALL_INC_DIR)
 
 .PHONY:	uninstall
 uninstall:
 	-cd $(INSTALL_LOCATION)/$(INSTALL_LIB_DIR); \
-		rm $(LIBRARY) $(LIBRARY_DEBUG)
+		rm $(LIBRARY)
 		
 	-cd $(INSTALL_LOCATION)/$(INSTALL_INC_DIR); \
 		rm $(EVRMA_INTERFACE_BARE) 
@@ -61,7 +52,7 @@ uninstall:
 .PHONY:	clean 
 clean:
 	for file in $(CLEANEXTS); do rm -f *.$$file; done
-	-rm $(LIBRARY) $(LIBRARY_DEBUG) 
+	-rm $(LIBRARY)
 
 .SUFFIXES: .cpp .o
 

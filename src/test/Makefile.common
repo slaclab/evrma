@@ -11,7 +11,7 @@ CPPFLAGS += -I$(EVRMA)/include
 CPPFLAGS += -I$(SRC_TEST_DIR)
 
 LDFLAGS +=  -L. -L$(EVRMA)/lib
-LDLIBS  +=  -lstdc++ -lpthread -lrt -lm -levrma -levrma_dbg
+LDLIBS  +=  -lstdc++ -lpthread -lrt -lm -levrma
 
 CLEANEXTS   = o a d
 

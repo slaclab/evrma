@@ -1,14 +1,19 @@
 ### NOTE: SETTABLE_CONFIG
-KERNEL_MODULE_EVRMA ?= ../../../evrmaDriver/master
+# KERNEL_MODULE_EVRMA ?= ../../../evrmaDriver/master
+KERNEL_MODULE_EVRMA ?= /afs/slac/g/lcls/package/linuxKernel_Modules/evrmaDriver/master
 
+.PHONY:	all
 all: compile_lib install_lib compile_test
 
+.PHONY:	clean
 clean:
 	make -f Makefile.lib clean
 	make -f Makefile.test clean
 
+.PHONY:	install
 install: install_lib install_test
 
+.PHONY:	uninstall
 uninstall:
 	make -f Makefile.lib  uninstall  INSTALL_LOCATION="$(INSTALL_LOCATION)"
 	make -f Makefile.test uninstall  INSTALL_LOCATION="$(INSTALL_LOCATION)"
