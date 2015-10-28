@@ -160,6 +160,25 @@ EvrmaSession evrmaOpenSession(const char *devNodeName, EvrmaCallback evrmaCallba
 		return NULL;
 	}
 	
+	
+	struct vdev_ioctl_status vevrStatus;
+	
+	int ret = ioctl(pSession->fd, VIRT_DEV_IOC_STATUS_GET, &vevrStatus);
+	
+	if(ret < 0) {
+		AERR("VIRT_DEV_IOC_STATUS_GET failed, errno=%d", errno);
+		cleanup(pSession, CLEAN_FD);
+		return NULL;
+	}
+
+	/* Get some properties of the VEVR for later use. */
+	pSession->minor = vevrStatus.minor;
+	pSession->major = vevrStatus.major;
+	// just in case the string was not obtained terminated
+	vevrStatus.name[MODAC_ID_MAX_NAME] = 0;
+	pSession->vevrName = vevrStatus.name;
+	
+	
 	int prot = PROT_READ;
 	
 	pSession->mmapLength = sizeof(struct vevr_mmap_data);
@@ -176,8 +195,9 @@ EvrmaSession evrmaOpenSession(const char *devNodeName, EvrmaCallback evrmaCallba
 	}
 
 	if(pSession->evrmaCallback != NULL) {
-		// realtime to be as fast as possible
-		pSession->threadRead = evrmaThreadStart(threadReadFunction, (void *)pSession, 1);
+		// realtime priority may also be set later in the scripts
+		pSession->threadRead = evrmaThreadStart(threadReadFunction, 
+					(void *)pSession, 1, ("evrma_" + pSession->vevrName).c_str());
 		if(pSession->threadRead == NULL) {
 			cleanup(pSession, CLEAN_MMAP);
 			return NULL;
@@ -519,16 +539,8 @@ int evrmaGetSysfsDevice(EvrmaSession session, char *buf, int bufLen)
 {
 	Session *pSession = (Session *)session;
 	
-	struct vdev_ioctl_status status;
-	
-	int ret = ioctl(pSession->fd, VIRT_DEV_IOC_STATUS_GET, &status);
-	
-	if(ret < 0) {
-		AERR("evrmaGetSysfsDevice failed, errno=%d", errno);
-		return -1;
-	}
-	
-	int n = snprintf(buf, bufLen, "/sys/dev/char/%d:%d", status.major, status.minor);
+	int n = snprintf(buf, bufLen, "/sys/dev/char/%d:%d", 
+						pSession->major, pSession->minor);
 	
 	if(n >= bufLen || n < 0) return -1; // too short
 

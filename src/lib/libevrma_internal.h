@@ -1,6 +1,8 @@
 #ifndef libevrma_internal_h
 #define libevrma_internal_h
 
+#include <string>
+
 #include "libevrma.h"
 
 class Session {
@@ -33,6 +35,11 @@ public:
 	
 	struct vevr_mmap_data *mmapPtr;
 	int mmapLength;
+	
+	int major;
+	int minor;
+	std::string vevrName;
+
 };
 
 

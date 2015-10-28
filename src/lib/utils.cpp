@@ -23,7 +23,7 @@ static void *encapsulatingFunction(void *arg)
 
 EvrmaThread evrmaThreadStart(
 	EvrmaThreadEntryFunction entryFunction,
-	void *arg, int realtime)
+	void *arg, int realtime, const char *name)
 {
 	ThreadInternal *ti= (ThreadInternal *)malloc(sizeof(ThreadInternal));
 
@@ -38,7 +38,7 @@ EvrmaThread evrmaThreadStart(
 
 	if(pthread_attr_init(&attr) != 0) {
 
-		LEndOnError:
+LEndOnError:
 		free(ti);
 		return NULL;
 	}
@@ -57,6 +57,12 @@ EvrmaThread evrmaThreadStart(
 				(void *)ti) != 0) {
 		goto LEndOnError;
 	} else {
+		
+		if(name != NULL) {
+			// TODO: check for error if the name couldn't be set
+			pthread_setname_np(ti->id, name);
+		}
+		
 		return (EvrmaThread)ti;
 	}
 }

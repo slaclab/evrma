@@ -435,7 +435,9 @@ int evrmaGetTimestampLatch(
  * 
  * @return
  * - 0 on success
- * - (-1) on checksum error or not Data Buffer Transmition Complete.
+ * - (-1) on checksum error
+ * - (-2) on error: not Data Buffer Transmition Complete.
+ * - (-3) on both errors
  */
 int evrmaGetDBuf(
 		/**
@@ -508,7 +510,13 @@ EvrmaThread evrmaThreadStart(
 		/**
 		* 1 if the thread should be a realtime thread.
 		*/
-		int realtime);
+		int realtime,
+		/**
+		 * The name of the thread. Can be NULL to inherit the name from the parent.
+		 * Because of the underlying pthread implementation, the length is 
+		 * restricted to 16 characters, including the terminating null byte ('\0').
+		 */
+		const char *name);
 
 /**
  * Joins the thread.
