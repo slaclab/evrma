@@ -24,9 +24,6 @@
 
 namespace {
 	
-#ifdef NON_SLAC_TEST_MACHINE
-#else
-
 double nowMonotonic(void)
 {
 	struct timespec tm;
@@ -218,7 +215,7 @@ public:
 	
 	TimeSlot timeSlot;
 	
-	void redraw(void)
+	void redraw(bool full)
 	{
 		if(counter1 < lastRedrawCounter + 320) {
 			AERR("\nCounter failure");
@@ -226,32 +223,38 @@ public:
 		
 		lastRedrawCounter = counter1;
 		
-		AMARK(
-				"[** %d dBuf=%d diff=%d**]\t"
-				"TAXI=%d,\tLOST=%d\tHEART=%d\tmissing=%d\tdoubled=%d\tstrange=%d(%d,%d,%d,%d,%d)\t"
-					"time err: "
-					"%10.5f - %10.5f usec   "
-					"%10.5f - %10.5f usec   "
-					"%10.5f - %10.5f usec   "
-					"\n", 
-					counter1, dbCount, counter1 - dbCount, taxi, lost, heart, missing, doubled, strange,
-					strange140, strange9, strange10_20_30, strange40, strange41,
-					minErr[0] * 1000000, maxErr[0] * 1000000,
-					minErr[1] * 1000000, maxErr[1] * 1000000,
-					minErr[2] * 1000000, maxErr[2] * 1000000
-			);
+		if(full) {
+			AMARK(
+					"[** %d dBuf=%d diff=%d**]\t"
+					"TAXI=%d,\tLOST=%d\tHEART=%d\tmissing=%d\tdoubled=%d\tstrange=%d(%d,%d,%d,%d,%d)\t"
+						"time err: "
+						"%10.5f - %10.5f usec   "
+						"%10.5f - %10.5f usec   "
+						"%10.5f - %10.5f usec   "
+						"\n", 
+						counter1, dbCount, counter1 - dbCount, taxi, lost, heart, missing, doubled, strange,
+						strange140, strange9, strange10_20_30, strange40, strange41,
+						minErr[0] * 1000000, maxErr[0] * 1000000,
+						minErr[1] * 1000000, maxErr[1] * 1000000,
+						minErr[2] * 1000000, maxErr[2] * 1000000
+				);
+		} else {
+			AMARK(
+					"[%d]\t"
+					"LOST=%d\tHEART=%d\tmissing=%d\tdoubled=%d\tstrange=%d(%d,%d,%d,%d,%d)"
+						"\n", 
+						counter1, lost, heart, missing, doubled, strange,
+						strange140, strange9, strange10_20_30, strange40, strange41
+				);
+		}
 	}
 
 };
 
 Fiducial fiducial;
 
-#endif // #ifdef NON_SLAC_TEST_MACHINE
-
 void evrmaCallback(EvrmaSession session, void *arg, int event, uint8_t *data, int length)
 {
-#ifdef NON_SLAC_TEST_MACHINE
-#else
 	if(doFiducial) {
 
 		if(event == EVRMA_EVENT_ERROR_TAXI) {
@@ -292,7 +295,6 @@ void evrmaCallback(EvrmaSession session, void *arg, int event, uint8_t *data, in
 		}
 		
 	} else 
-#endif // #ifdef NON_SLAC_TEST_MACHINE
 
 	{
 		
@@ -302,10 +304,7 @@ void evrmaCallback(EvrmaSession session, void *arg, int event, uint8_t *data, in
 	}
 }
 
-#ifdef NON_SLAC_TEST_MACHINE
-#else
-
-bool runFiducial(EvrmaSession session)
+bool runFiducial(EvrmaSession session, bool full = false)
 {
 	ADBG("Testing fiducial");
 	
@@ -316,9 +315,12 @@ bool runFiducial(EvrmaSession session)
 	evrmaSubscribe(session, EVRMA_EVENT_DBUF_DATA);
 	evrmaSubscribe(session, EVRMA_EVENT_ERROR_LOST);
 	evrmaSubscribe(session, EVRMA_EVENT_ERROR_HEART);
-	evrmaSubscribe(session, EVRMA_EVENT_ERROR_TAXI);
-	
-	ADBG("Subscribed DBUF, LOST, HEART, TAXI");
+	if(full) {
+		evrmaSubscribe(session, EVRMA_EVENT_ERROR_TAXI);
+		ADBG("Subscribed DBUF, LOST, HEART, TAXI");
+	} else {
+		ADBG("Subscribed DBUF, LOST, HEART");
+	}
 	
 	evrmaSubscribe(session, 1);
 	evrmaSubscribe(session, 9);
@@ -339,14 +341,11 @@ bool runFiducial(EvrmaSession session)
 
 	while(true) {
 		sleep(1);
-		fiducial.redraw();
+		fiducial.redraw(full);
 	}
 	
 	return true;
 }
-
-#endif // #ifdef NON_SLAC_TEST_MACHINE
-
 
 } // unnamed
 
@@ -508,11 +507,7 @@ LEnd1:
 			
 			char b[1000];
 			snprintf(b, 1000, "echo '%d %d %d' > "
-#ifdef NON_SLAC_TEST_MACHINE
-										"./tmp"
-#else
 										"/home/laci/tmp"
-#endif
 												"/_result_.tmp", prescaler, delay, width);
 			ADBG("System: %s", b);
 			IGNORE_RETVAL(system(b));
@@ -556,13 +551,13 @@ LEnd1:
 		
 		ret = evrmaTest(session, testPar);
 		
-#ifdef NON_SLAC_TEST_MACHINE
-#else
 	} else if(cmd == "fiducial") {
 				
 		ret = runFiducial(session);
-#endif // #ifdef NON_SLAC_TEST_MACHINE
-
+		
+	} else if(cmd == "fiducial_full") {
+				
+		ret = runFiducial(session, true);
 		
 	} else {
 		// unknown command

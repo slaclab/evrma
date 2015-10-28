@@ -85,8 +85,8 @@ int main(int argc, const char *argv[])
 		// start two parallel threads
 		
 		/*ctxt.threadRead = */
-		evrmaThreadStart(threadReadFunction, (void *)&ctxt, 1);
-		evrmaThreadStart(threadReadFunction, (void *)&ctxt, 1);
+		evrmaThreadStart(threadReadFunction, (void *)&ctxt, 1, NULL);
+		evrmaThreadStart(threadReadFunction, (void *)&ctxt, 1, NULL);
 		
 		// sleep half a second
 		usleep(1500*1000);
