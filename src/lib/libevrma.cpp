@@ -226,9 +226,17 @@ int evrmaGetDBuf(EvrmaSession session, uint32_t **data, int *size)
 	bool checksumOk = (pSession->mmapPtr->data_buff.status & (1<<C_EVR_DATABUF_CHECKSUM)) == 0;
 	bool complete = (pSession->mmapPtr->data_buff.status & (1<<C_EVR_DATABUF_RXREADY)) != 0;
 	
-// 	ADBG("status: 0x%x, checksumOk=%d, complete=%d", 
-// 			pSession->mmapPtr->data_buff.status, checksumOk, complete);
-	return (checksumOk && complete) ? 0 : -1;
+	if(checksumOk) {
+		if(complete)
+			return 0;
+		else
+			return -2;
+	} else {
+		if(complete)
+			return -1;
+		else
+			return -3;
+	}
 }
 
 
@@ -405,6 +413,8 @@ int evrmaSetPulseRamForEvent(EvrmaSession session,
 		int pulsegenIndex, uint8_t eventCode, uint8_t data)
 {
 	Session *pSession = (Session *)session;
+	
+// // // 	ADBG("evrmaSetPulseRamForEvent %d %d %d", pulsegenIndex, eventCode, data);
 	
 	struct vevr_ioctl_pulse_map_ram_for_event pData = {
 		{{
