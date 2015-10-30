@@ -67,7 +67,7 @@ void threadReadFunction(void *arg)
 
 		if(n <= 0) continue;
 
-		int readInx = 0;
+// // // // // 		int readInx = 0;
 		
 		uint8_t *buffP = buff;
 		int stillToBeUsed = n;
@@ -534,13 +534,12 @@ int evrmaGetTimestampLatch(EvrmaSession session, uint32_t *tLa)
 {
 	Session *pSession = (Session *)session;
 	
-	struct vevr_status status;
-	if(getStatusAll(pSession, &status) < 0) {
-		AERR("evrmaGetPulseCount failed, errno=%d", errno);
+	int ret = ioctl(pSession->fd, VEVR_IOC_LATCHED_TIMESTAMP_GET, tLa);
+
+	if(ret < 0) {
+		AERR("evrmaGetTimestampLatch failed, errno=%d", errno);
 		return -1;
 	}
-	
-	*tLa = status.timestamp_latch;
 
 	return 0;
 }
