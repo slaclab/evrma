@@ -366,7 +366,9 @@ int main(int argc, const char *argv[])
 	cmd = argv[argc_used ++];
 	
 	// only read on 'read'
-	session = evrmaOpenSession(virtDevName.c_str(), (cmd == "read" || cmd == "fiducial") ? evrmaCallback : NULL, 0);
+	session = evrmaOpenSession(virtDevName.c_str(), 
+					(cmd == "read" || cmd == "fiducial" || cmd == "fiducial_full") 
+						? evrmaCallback : NULL, 0);
 	if(session == NULL) {
 		AERR("evrmaOpenSession failed.");
 		goto LEnd1;
