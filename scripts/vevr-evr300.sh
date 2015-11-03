@@ -64,8 +64,8 @@ evrManager /dev/evr0mng alloc vevr0 pulsegen
 evrManager /dev/evr0mng alloc vevr0 pulsegen
 evrManager /dev/evr0mng alloc vevr0 pulsegen
 evrManager /dev/evr0mng alloc vevr0 pulsegen
-evrManager /dev/evr0mng alloc vevr0 pulsegen
-evrManager /dev/evr0mng alloc vevr0 pulsegen
+# evrManager /dev/evr0mng alloc vevr0 pulsegen
+# evrManager /dev/evr0mng alloc vevr0 pulsegen
 
 evrManager /dev/evr0mng output vevr0 0 P 0
 evrManager /dev/evr0mng output vevr0 1 P 1
@@ -81,8 +81,10 @@ evrManager /dev/evr0mng output vevr0 10 P 10
 evrManager /dev/evr0mng output vevr0 11 P 11
 evrManager /dev/evr0mng output vevr0 12 P 12
 evrManager /dev/evr0mng output vevr0 13 P 13
-evrManager /dev/evr0mng output vevr0 14 P 14
-evrManager /dev/evr0mng output vevr0 15 P 15
+### set the last two outputs to the first two pulse gens to test the multiple
+### pulsegen use
+evrManager /dev/evr0mng output vevr0 14 P 0
+evrManager /dev/evr0mng output vevr0 15 P 1
 
 # test_virt_dev /dev/vevr0 fiducial
 

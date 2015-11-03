@@ -8,7 +8,6 @@
 if ! test-core1.sh; then exit 1; fi
 if ! test-core2.sh; then exit 1; fi
 if ! test-core3.sh; then exit 1; fi
-if ! test-core4.sh; then exit 1; fi
 	
 echo "***************** ALL TESTS PASSED ************************"
 	

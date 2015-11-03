@@ -46,6 +46,9 @@ command_verbose "evrManager /dev/$SIM_MNG_DEV alloc $TESTED_VEVR  pulsegen 24"
 ### make sure the settings remain to be viewed
 echo 1 > /sys/class/modac-virt/$TESTED_VEVR/config
 
+### NOTE: The simulation device do not check the available bits for settings
+### so the settings can be of any value.
+
 PGPARS0="21,22,23"
 PGPARS1="110,120,130"
 
