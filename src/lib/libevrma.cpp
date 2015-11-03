@@ -66,8 +66,6 @@ void threadReadFunction(void *arg)
 		int n = read(pSession->fd, buff, READBUFLEN);
 
 		if(n <= 0) continue;
-
-// // // // // 		int readInx = 0;
 		
 		uint8_t *buffP = buff;
 		int stillToBeUsed = n;
@@ -413,8 +411,6 @@ int evrmaSetPulseRamForEvent(EvrmaSession session,
 		int pulsegenIndex, uint8_t eventCode, uint8_t data)
 {
 	Session *pSession = (Session *)session;
-	
-// // // 	ADBG("evrmaSetPulseRamForEvent %d %d %d", pulsegenIndex, eventCode, data);
 	
 	struct vevr_ioctl_pulse_map_ram_for_event pData = {
 		{{

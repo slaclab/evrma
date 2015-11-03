@@ -9,6 +9,7 @@
 #define ADBG(FORMAT, ...) printf("DBG: " FORMAT "\n", ## __VA_ARGS__)
 #define AINFO(FORMAT, ...) printf("INFO: " FORMAT "\n", ## __VA_ARGS__)
 #define AERR(FORMAT, ...) printf("ERROR: " FORMAT "\n", ## __VA_ARGS__)
+#define AMARK(FORMAT, ...) {printf(FORMAT, ## __VA_ARGS__); fflush(stdout);}
 
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))

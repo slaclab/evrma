@@ -9,7 +9,13 @@
 #include "linux-evrma.h"
 
 #ifndef DBG_MEASURE_TIME_FROM_IRQ_TO_USER
-#error Please, remove #include "linux-evrma.h" now that is not needed anymore.
+#warning **********************************************************************
+#warning **********************************************************************
+#warning **********************************************************************
+#warning Please, remove #include "linux-evrma.h" now that is not needed anymore.
+#warning **********************************************************************
+#warning **********************************************************************
+#warning **********************************************************************
 #endif
 
 #include "libevrma.h"

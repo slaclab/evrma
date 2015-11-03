@@ -24,6 +24,9 @@
 
 namespace {
 	
+#ifdef NO_FIDUCIAL_TEST
+#else
+
 double nowMonotonic(void)
 {
 	struct timespec tm;
@@ -232,7 +235,8 @@ public:
 						"%10.5f - %10.5f usec   "
 						"%10.5f - %10.5f usec   "
 						"\n", 
-						counter1, dbCount, counter1 - dbCount, taxi, lost, heart, missing, doubled, strange,
+						counter1, dbCount, counter1 - dbCount, 
+						taxi, lost, heart, missing, doubled, strange,
 						strange140, strange9, strange10_20_30, strange40, strange41,
 						minErr[0] * 1000000, maxErr[0] * 1000000,
 						minErr[1] * 1000000, maxErr[1] * 1000000,
@@ -253,8 +257,12 @@ public:
 
 Fiducial fiducial;
 
+#endif // NO_FIDUCIAL_TEST
+
 void evrmaCallback(EvrmaSession session, void *arg, int event, uint8_t *data, int length)
 {
+#ifdef NO_FIDUCIAL_TEST
+#else
 	if(doFiducial) {
 
 		if(event == EVRMA_EVENT_ERROR_TAXI) {
@@ -264,12 +272,19 @@ void evrmaCallback(EvrmaSession session, void *arg, int event, uint8_t *data, in
 		} else if(event == EVRMA_EVENT_ERROR_HEART) {
 			heart ++;
 		} else if(event >= 0 && event < 256) {
+			
+#ifdef DBG_MEASURE_TIME_FROM_IRQ_TO_USER
+			evrmaTimeDebug(event, data, 110, 0, 0);
+#endif
+			
 			fiducial.addEvent(event);
+
 		} else if(event == EVRMA_EVENT_DBUF_DATA) {
 			
 			uint32_t *dataDBuf;
 			int dbufLength;
-			int checksumOk = evrmaGetDBuf(session, &dataDBuf, &dbufLength) == 0;
+			int dbufStatus = evrmaGetDBuf(session, &dataDBuf, &dbufLength);
+			int checksumOk = dbufStatus == 0;
 			
 			std::string sd;
 			
@@ -281,8 +296,9 @@ void evrmaCallback(EvrmaSession session, void *arg, int event, uint8_t *data, in
 				
 			if(!checksumOk) {
 				
-				ADBG("DBUF: %5.6lf\t%s\t not checksumOk, dbufLength=%d, ", nowMonotonic(), sd.c_str(), dbufLength);
-// 				printf("ba"); fflush(stdout);
+				ADBG("DBUF: %5.6lf\t%s\t dbufStatus=%d, dbufLength=%d, ", 
+					 nowMonotonic(), sd.c_str(), dbufStatus, dbufLength);
+
 			} else if(dbufLength != 52) {
 				ADBG("DBUF: not 52 bytes");
 			} else {
@@ -295,6 +311,7 @@ void evrmaCallback(EvrmaSession session, void *arg, int event, uint8_t *data, in
 		}
 		
 	} else 
+#endif // NO_FIDUCIAL_TEST
 
 	{
 		
@@ -303,6 +320,9 @@ void evrmaCallback(EvrmaSession session, void *arg, int event, uint8_t *data, in
 		}
 	}
 }
+
+#ifdef NO_FIDUCIAL_TEST
+#else
 
 bool runFiducial(EvrmaSession session, bool full = false)
 {
@@ -346,6 +366,8 @@ bool runFiducial(EvrmaSession session, bool full = false)
 	
 	return true;
 }
+
+#endif // NO_FIDUCIAL_TEST
 
 } // unnamed
 
@@ -509,7 +531,11 @@ LEnd1:
 			
 			char b[1000];
 			snprintf(b, 1000, "echo '%d %d %d' > "
+#ifdef WRITABLE_TMP_DIR
+										WRITABLE_TMP_DIR
+#else
 										"/home/laci/tmp"
+#endif
 												"/_result_.tmp", prescaler, delay, width);
 			ADBG("System: %s", b);
 			IGNORE_RETVAL(system(b));
@@ -553,6 +579,8 @@ LEnd1:
 		
 		ret = evrmaTest(session, testPar);
 		
+#ifdef NO_FIDUCIAL_TEST
+#else
 	} else if(cmd == "fiducial") {
 				
 		ret = runFiducial(session);
@@ -560,6 +588,7 @@ LEnd1:
 	} else if(cmd == "fiducial_full") {
 				
 		ret = runFiducial(session, true);
+#endif
 		
 	} else {
 		// unknown command
