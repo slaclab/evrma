@@ -14,7 +14,6 @@
  
 #include "libevrma.h"
 #include "libevrma_internal.h"
-#include "utils.h"
 
 namespace { // unnamed
 	

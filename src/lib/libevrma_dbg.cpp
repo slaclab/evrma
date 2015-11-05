@@ -15,7 +15,6 @@
 #include "libevrma.h"
 #include "libevrma_internal.h"
 #include "libevrma_dbg.h"
-#include "utils.h"
 
 // --------- debug only ----------
 

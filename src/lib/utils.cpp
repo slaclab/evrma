@@ -1,7 +1,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-#include "utils.h"
+#include "libevrma_internal.h"
 #include "libevrma.h"
 
 typedef struct
