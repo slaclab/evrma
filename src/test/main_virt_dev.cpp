@@ -281,6 +281,9 @@ void evrmaCallback(EvrmaSession session, void *arg, int event, uint8_t *data, in
 
 		} else if(event == EVRMA_EVENT_DBUF_DATA) {
 			
+#ifdef DBG_MEASURE_TIME_FROM_IRQ_TO_USER
+			evrmaTimeDebug(event, data, 110, 0, 0);
+#endif
 			uint32_t *dataDBuf;
 			int dbufLength;
 			int dbufStatus = evrmaGetDBuf(session, &dataDBuf, &dbufLength);

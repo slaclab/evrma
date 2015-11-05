@@ -112,10 +112,11 @@ void evrmaTimeDebug(int event, void *data, int acceptableLimitUsec,
 	struct evr_data_fifo_event *evData = (struct evr_data_fifo_event *)data;
 
 	enum SpecialEvent {
-		SE_PUT_BUFF = 256,
+		SE_PUT_BUFF = 600,
 		SE_COPY_TO_USER,
 		SE_USER_START,
 		SE_USER_END,
+		SE_DBUF_READ_TIME,
 		
 		SE_COUNT
 	};
@@ -175,6 +176,15 @@ void evrmaTimeDebug(int event, void *data, int acceptableLimitUsec,
 		if(val < mint[se]) mint[se] = val;
 		
 		
+		if(event == EVRMA_EVENT_DBUF_DATA) {
+			
+			val = evData->timestamp / MHZ;
+			se = SE_DBUF_READ_TIME;
+			
+			if(val > maxt[se]) maxt[se] = val;
+			if(val < mint[se]) mint[se] = val;
+		
+		}
 
 		counter ++;
 		if(counter > 4*4096) {

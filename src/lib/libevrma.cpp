@@ -84,8 +84,13 @@ void threadReadFunction(void *arg)
 				break;
 			}
 			
+#ifdef DBG_MEASURE_TIME_FROM_IRQ_TO_USER
+			if((event >= EVRMA_FIFO_MIN_EVENT_CODE && event <= EVRMA_FIFO_MAX_EVENT_CODE) ||
+					(event == EVRMA_EVENT_DBUF_DATA)
+			) {
+#else
 			if(event >= EVRMA_FIFO_MIN_EVENT_CODE && event <= EVRMA_FIFO_MAX_EVENT_CODE) {
-				
+#endif
 				// EVR fifo event codes
 				
 				int dataLength = sizeof(struct evr_data_fifo_event);
