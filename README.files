@@ -1,0 +1,139 @@
+Directories "build-*"
+=====================
+
+Contains the make files needed to build the binaries (libs, executables) for the
+targets on different platforms.
+
+
+
+
+Directory "scripts"
+=====================
+
+Contains scripts needed for the test procedures. The scripts can also be
+used as convenient way to bring up some default VEVR configurations.
+
+
+Directory "src"
+=====================
+
+
+Makefile.common
+---------------
+
+Platform independent Makefile used for building "src" and "test".
+
+
+
+Directory "src/lib"
+=====================
+
+Contains files needed to build the user space library.
+
+
+
+
+Makefile.common
+---------------
+
+Platform independent Makefile used for building.
+
+
+
+libevrma.h
+-----------
+
+Contains the exported API for the EVRMA user space library. This file is
+installed on the target platform include directory.
+
+
+
+
+libevrma_dbg.h
+-----------------
+
+Is similar to libevrma.h, but contains additional API definitions that are
+meant only to be used in the test applications. Normal applications should
+use libevrma.h API only.
+
+
+
+
+libevrma.cpp
+-------------
+
+The implementation of the API for the EVRMA user space library.
+
+
+
+
+libevrma_dbg.cpp
+------------------
+
+The implementation of the debugging part of the library.
+
+
+
+
+libevrma_internal.h
+----------------------
+
+Internal definitions that connect other source files.
+
+
+
+
+utils.cpp
+----------
+
+Some utilities needed for the library operations. Some of these utilities
+are exported through the main API (thread, mutex functions).
+
+
+
+Directory "src/test"
+=====================
+
+Containts files needed to run the EVRMA kernel and user library tests.
+
+
+
+
+
+Makefile.common
+---------------
+
+Platform independent Makefile used for building.
+
+
+
+api.cpp
+--------
+
+Testing all the library API functions.
+
+
+
+
+main_virt_dev.cpp
+------------------
+
+Support for the test procedure:
+
+- subscribing, unsubscribing events
+- reading and analyzing events
+- write and read the configuration of the pulse generators (parameters, Map RAM)
+- testing fiducial events
+
+
+
+
+main_virt_dev2.cpp
+------------------
+
+Support for the test procedure: concurrently test the event processing
+with two VEVRs.
+
+
+
+ 
