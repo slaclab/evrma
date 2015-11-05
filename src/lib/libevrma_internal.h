@@ -61,7 +61,8 @@ int waitForRead(int fd, int timeoutMs);
 
 int toHex(unsigned char c);
 
-
+/* Checks if the current thread is the one defined by 'thread' argument. */
+bool evrmaThreadCurrentIs(EvrmaThread thread);
 
 
 

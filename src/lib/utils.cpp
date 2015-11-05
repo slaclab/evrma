@@ -75,6 +75,12 @@ void evrmaThreadJoin(EvrmaThread thread)
 	free(ti);
 }
 
+bool evrmaThreadCurrentIs(EvrmaThread thread)
+{
+	ThreadInternal *ti = (ThreadInternal *)thread;
+	return ti->id == pthread_self();
+}
+
 EvrmaMutex evrmaMutexOpen(void)
 {
 	pthread_mutex_t *pmi = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));

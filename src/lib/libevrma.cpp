@@ -117,6 +117,31 @@ void threadReadFunction(void *arg)
 	}
 }
 
+/* Check if the thread that calls this is not a read thread. Return false if
+ * it is.
+ * 
+ * NOTE: This was introduced to check if in the current evrSupport code of the
+ * evrClient module is compliant to the restricted call policy. This will also
+ * protect from possible future error calls in the evrSupport.
+ */
+bool checkNotInReadThread(Session *pSession)
+{
+	bool ok = !evrmaThreadCurrentIs(pSession->threadRead);
+	
+	if(!ok) {
+		AERR("\n\n\n");
+		AERR("================================================================");
+		AERR("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		AERR("*** Not allowed function called in high priority read thread ***");
+		AERR("***                        DENIED!                           ***");
+		AERR("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		AERR("================================================================");
+		AERR("\n\n\n");
+	}
+	
+	return ok;
+}
+
 bool subscribe(EvrmaSession session, int event, uint8_t action)
 {
 	Session *pSession = (Session *)session;
@@ -125,6 +150,9 @@ bool subscribe(EvrmaSession session, int event, uint8_t action)
 		event,
 		action
 	};
+	
+	if(!checkNotInReadThread(pSession))
+		return false;
 	
 	int ret = ioctl(pSession->fd, VIRT_DEV_IOC_SUBSCRIBE, &subs);
 	
@@ -268,6 +296,9 @@ int evrmaSetPulseParams(EvrmaSession session,
 		width,
 	};
 	
+	if(!checkNotInReadThread(pSession))
+		return -1;
+	
 	int ret = ioctl(pSession->fd, VEVR_IOC_PULSE_PARAM_SET, &ppData);
 	
 	if(ret < 0) {
@@ -290,6 +321,9 @@ int evrmaGetPulseParams(EvrmaSession session,
 			pulsegenIndex,
 		}},
 	};
+	
+	if(!checkNotInReadThread(pSession))
+		return -1;
 	
 	int ret = ioctl(pSession->fd, VEVR_IOC_PULSE_PARAM_GET, &ppData);
 	
@@ -321,6 +355,9 @@ int evrmaSetPulseProperties(EvrmaSession session,
 		pulseCfgBits,
 	};
 	
+	if(!checkNotInReadThread(pSession))
+		return -1;
+	
 	int ret = ioctl(pSession->fd, VEVR_IOC_PULSE_PROP_SET, &ppData);
 	
 	if(ret < 0) {
@@ -343,6 +380,9 @@ int evrmaGetPulseProperties(EvrmaSession session,
 			pulsegenIndex,
 		}},
 	};
+	
+	if(!checkNotInReadThread(pSession))
+		return -1;
 	
 	int ret = ioctl(pSession->fd, VEVR_IOC_PULSE_PROP_GET, &ppData);
 	
@@ -372,6 +412,9 @@ int evrmaSetPulseRam(EvrmaSession session,
 	
 	memcpy(pData.map, data, sizeof(pData.map));
 	
+	if(!checkNotInReadThread(pSession))
+		return -1;
+	
 	int ret = ioctl(pSession->fd, VEVR_IOC_PULSE_MAP_RAM_SET, &pData);
 	
 	if(ret < 0) {
@@ -393,6 +436,9 @@ int evrmaGetPulseRam(EvrmaSession session,
 			pulsegenIndex,
 		}},
 	};
+	
+	if(!checkNotInReadThread(pSession))
+		return -1;
 	
 	int ret = ioctl(pSession->fd, VEVR_IOC_PULSE_MAP_RAM_GET, &pData);
 	
@@ -420,6 +466,9 @@ int evrmaSetPulseRamForEvent(EvrmaSession session,
 		data,
 	};
 	
+	if(!checkNotInReadThread(pSession))
+		return -1;
+	
 	int ret = ioctl(pSession->fd, VEVR_IOC_PULSE_MAP_RAM_SET_FOR_EVENT, &pData);
 	
 	if(ret < 0) {
@@ -443,6 +492,9 @@ int evrmaGetPulseRamForEvent(EvrmaSession session,
 		eventCode,
 	};
 	
+	if(!checkNotInReadThread(pSession))
+		return -1;
+	
 	int ret = ioctl(pSession->fd, VEVR_IOC_PULSE_MAP_RAM_GET_FOR_EVENT, &pData);
 	
 	if(ret < 0) {
@@ -462,6 +514,9 @@ static int getStatusAll(Session *pSession, struct vevr_status *status)
 			MODAC_RES_TYPE_NONE,
 		}},
 	};
+	
+	if(!checkNotInReadThread(pSession))
+		return -1;
 	
 	int ret = ioctl(pSession->fd, VEVR_IOC_STATUS_GET, &pData);
 	
@@ -500,6 +555,9 @@ int evrmaGetPulseCount(EvrmaSession session)
 		EVR_RES_TYPE_PULSEGEN,
 	};
 	
+	if(!checkNotInReadThread(pSession))
+		return -1;
+	
 	int ret = ioctl(pSession->fd, VIRT_DEV_IOC_RES_STATUS_GET, &pData);
 	
 	if(ret < 0) {
@@ -529,6 +587,7 @@ int evrmaGetTimestampLatch(EvrmaSession session, uint32_t *tLa)
 {
 	Session *pSession = (Session *)session;
 	
+	/* This is a safe call for read thread */
 	int ret = ioctl(pSession->fd, VEVR_IOC_LATCHED_TIMESTAMP_GET, tLa);
 
 	if(ret < 0) {
@@ -542,6 +601,9 @@ int evrmaGetTimestampLatch(EvrmaSession session, uint32_t *tLa)
 int evrmaGetSysfsDevice(EvrmaSession session, char *buf, int bufLen)
 {
 	Session *pSession = (Session *)session;
+	
+	if(!checkNotInReadThread(pSession))
+		return -1;
 	
 	int n = snprintf(buf, bufLen, "/sys/dev/char/%d:%d", 
 						pSession->major, pSession->minor);

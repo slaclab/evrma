@@ -26,6 +26,14 @@ extern "C" {
  * 
  * The library is not thread-safe.
  * 
+ * @warning
+ * 
+ * For maximal RT performance care must be taken when calling the library
+ * functions. The library calls the kernel's IOCTLs that are protected by
+ * mutexes. High priority RT threads may be blocked by low priority ones if
+ * such functions are called. The only function that is designed to be called
+ * from the high priority task is @ref evrmaGetTimestampLatch.
+ * 
  * @{
  */
 
@@ -75,6 +83,9 @@ typedef void (* EvrmaCallback)(
  *   thread safety measures should be considered.
  * - The function must be processed as quickly as possible not to block the 
  *   thread processing. Failing to do so could lead to the event information loss.
+ *   It is advisable to raise the RT priority of this task after it's been
+ *   started. Only call the EVRMA API functions that are designed to be called from
+ *   high prioirity tasks.
  * - The parameters passed from the system are valid only during the callback 
  *   call. Any information that they carry should be copied if later 
  *   use is required.
@@ -422,6 +433,10 @@ int evrmaGetSecondsShift(
  * 
  * @return
  * A negative value on error, 0 on success.
+ * 
+ * @note
+ * This function can be called in high priority RT tasks.
+ * 
  */
 int evrmaGetTimestampLatch(
 		/**
