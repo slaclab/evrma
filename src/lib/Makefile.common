@@ -34,7 +34,7 @@ $(LIBRARY): $(patsubst %.cpp,%.o,$(SRC))
 	ranlib $@
 	
 .PHONY:	install
-install:
+install: all
 	mkdir -p $(INSTALL_LOCATION)/$(INSTALL_LIB_DIR)
 	mkdir -p $(INSTALL_LOCATION)/$(INSTALL_INC_DIR)
 	cp -p $(LIBRARY) $(INSTALL_LOCATION)/$(INSTALL_LIB_DIR)

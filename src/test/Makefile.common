@@ -18,18 +18,16 @@ CLEANEXTS   = o a d
 # source files.
 SRC_TEST1 =     main_virt_dev.cpp
 SRC_TEST2 =     main_virt_dev2.cpp
-SRC_TEST3 =     main_virt_dev3.cpp
 SRC_API =     api.cpp
 
 VDEV_TEST1=test_virt_dev
 VDEV_TEST2=test_virt_dev2
-VDEV_TEST3=test_virt_dev3
 TEST_API=test_api
 INSTALL_BIN_DIR  = bin
 
 # Default target
 .PHONY:	all
-all:	$(VDEV_TEST1) $(VDEV_TEST2) $(VDEV_TEST3) $(TEST_API)
+all:	$(VDEV_TEST1) $(VDEV_TEST2) $(TEST_API)
 
 $(VDEV_TEST1): $(patsubst %.cpp,%.o,$(SRC_TEST1))
 	@$(CC) $(patsubst %.cpp,%.o,$(SRC_TEST1)) $(LDFLAGS) $(LDLIBS) -o $(VDEV_TEST1)
@@ -39,29 +37,25 @@ $(VDEV_TEST2): $(patsubst %.cpp,%.o,$(SRC_TEST2))
 	@$(CC) $(patsubst %.cpp,%.o,$(SRC_TEST2)) $(LDFLAGS) $(LDLIBS) -o $(VDEV_TEST2)
 	@echo "  LD   " $@
 
-$(VDEV_TEST3): $(patsubst %.cpp,%.o,$(SRC_TEST3))
-	@$(CC) $(patsubst %.cpp,%.o,$(SRC_TEST3)) $(LDFLAGS) $(LDLIBS) -o $(VDEV_TEST3)
-	@echo "  LD   " $@
-
 $(TEST_API): $(patsubst %.cpp,%.o,$(SRC_API))
 	@$(CC) $(patsubst %.cpp,%.o,$(SRC_API)) $(LDFLAGS) $(LDLIBS) -o $(TEST_API)
 	@echo "  LD   " $@
 
 
 .PHONY:	install
-install:
+install: all
 	mkdir -p $(INSTALL_LOCATION)/$(INSTALL_BIN_DIR)
-	cp -p $(VDEV_TEST1) $(VDEV_TEST2) $(VDEV_TEST3) $(TEST_API) $(INSTALL_LOCATION)/$(INSTALL_BIN_DIR)
+	cp -p $(VDEV_TEST1) $(VDEV_TEST2) $(TEST_API) $(INSTALL_LOCATION)/$(INSTALL_BIN_DIR)
 
 .PHONY:	uninstall
 uninstall:
 	-cd $(INSTALL_LOCATION)/$(INSTALL_BIN_DIR); \
-		rm $(VDEV_TEST1) $(VDEV_TEST2) $(VDEV_TEST3) $(TEST_API)
+		rm $(VDEV_TEST1) $(VDEV_TEST2) $(TEST_API)
 
 .PHONY:	clean 
 clean:
 	for file in $(CLEANEXTS); do rm -f *.$$file; done
-	-rm $(VDEV_TEST1) $(VDEV_TEST2) $(VDEV_TEST3) $(TEST_API)
+	-rm $(VDEV_TEST1) $(VDEV_TEST2) $(TEST_API)
 
 .SUFFIXES: .cpp .o
 
