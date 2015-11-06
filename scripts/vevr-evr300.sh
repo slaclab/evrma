@@ -50,6 +50,7 @@ evrManager /dev/evr0mng alloc vevr0 output 15
 # abs:14,bits:presc=0;delay=32;width=16
 # abs:15,bits:presc=0;delay=32;width=16
 
+### allocate only 14 of them
 evrManager /dev/evr0mng alloc vevr0 pulsegen 16 32 32
 evrManager /dev/evr0mng alloc vevr0 pulsegen 16 32 32
 evrManager /dev/evr0mng alloc vevr0 pulsegen 16 32 32
@@ -64,8 +65,6 @@ evrManager /dev/evr0mng alloc vevr0 pulsegen
 evrManager /dev/evr0mng alloc vevr0 pulsegen
 evrManager /dev/evr0mng alloc vevr0 pulsegen
 evrManager /dev/evr0mng alloc vevr0 pulsegen
-# evrManager /dev/evr0mng alloc vevr0 pulsegen
-# evrManager /dev/evr0mng alloc vevr0 pulsegen
 
 evrManager /dev/evr0mng output vevr0 0 P 0
 evrManager /dev/evr0mng output vevr0 1 P 1
@@ -86,8 +85,3 @@ evrManager /dev/evr0mng output vevr0 13 P 13
 evrManager /dev/evr0mng output vevr0 14 P 0
 evrManager /dev/evr0mng output vevr0 15 P 1
 
-# test_virt_dev /dev/vevr0 fiducial
-
-exit 0
-
-for out in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17; do evrManager /dev/evr0mng output vevr0 $out S 62; echo $out; done

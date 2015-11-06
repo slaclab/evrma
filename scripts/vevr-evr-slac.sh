@@ -52,4 +52,3 @@ evrManager /dev/evr1mng output vevr1 9 P 9
 evrManager /dev/evr1mng output vevr1 10 P 10
 evrManager /dev/evr1mng output vevr1 11 P 11
 
-# test_virt_dev /dev/vevr1 fiducial

@@ -23,4 +23,3 @@ evrManager /dev/evr0mng output vevr0 0 P 0
 evrManager /dev/evr0mng output vevr0 1 P 1
 evrManager /dev/evr0mng output vevr0 2 P 2 
 
-# test_virt_dev /dev/vevr0 fiducial

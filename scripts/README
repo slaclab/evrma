@@ -1,0 +1,79 @@
+The scripts usage
+===================
+
+env-cpu-b084-pm01.sh
+---------------------
+
+Source this file to set up the environment on the machine cpu-b084-pm01:
+
+    . env-cpu-b084-pm01.sh
+
+    
+    
+env-cpu-b084-pm04.sh
+---------------------
+
+Source this file to set up the environment on the machine cpu-b084-pm04:
+
+    . env-cpu-b084-pm04.sh
+
+    
+    
+cleanup.sh
+-----------
+
+Run to remove the EVRMA kernel driver. Will fail if the driver is in use
+by any application (the result should be checked by 'lsmod' which shouldn't
+list the 'evrma' module).
+
+
+
+setup.sh
+---------
+
+Loads the EVRMA kernel module.
+
+
+
+vevr-evr300.sh
+---------------
+
+Brings up a VEVR (/dev/vevr0) with the default maximal configuration for the
+EVR300 on the machine cpu-b084-pm04.
+
+
+
+vevr-evr230.sh
+---------------
+
+Brings up a VEVR (/dev/vevr0) with the default maximal configuration for the
+EVR230 on the machine cpu-b084-pm01. Can be used together with 'vevr-evr-slac.sh'.
+
+
+
+vevr-evr-slac.sh
+-----------------
+
+Brings up a VEVR (/dev/vevr1) with the default maximal configuration for the
+SLAC EVR on the machine cpu-b084-pm01. Can be used together with 'vevr-evr230.sh'.
+
+
+
+set_2_vevrs_for_evr230.sh
+--------------------------
+
+Used to bring up two VEVRs (/dev/vevr0 and /dev/vevr1) on the machine
+cpu-b084-pm01, both are made from EVR230. The first VEVR is created by 
+vevr-evr230.sh, the second is used for event processing only.
+
+
+Other scripts
+--------------
+
+Other scripts are not meant for manual use. They're designed to support the
+automated tests.
+
+
+
+
+
