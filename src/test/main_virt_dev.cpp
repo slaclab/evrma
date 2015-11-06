@@ -27,6 +27,7 @@ namespace {
 #ifdef NO_FIDUCIAL_TEST
 #else
 
+/* returns seconds */
 double nowMonotonic(void)
 {
 	struct timespec tm;
@@ -104,6 +105,45 @@ public:
 		}
 	}
 	
+	class Freq {
+	public:
+		
+		explicit Freq(void)
+			: last(0)
+			, minDiff(10000000)
+			, maxDiff(0)
+		{
+		}
+		
+		void measure(double time)
+		{
+			if(last > 0) {
+				
+				double diff = time - last;
+				
+				if(diff < minDiff)
+					minDiff = diff;
+				
+				if(diff > maxDiff)
+					maxDiff = diff;
+				
+			}
+			
+			last = time;
+		}
+		
+		double last;
+		double minDiff;
+		double maxDiff;
+		
+		void reset(void)
+		{
+			minDiff = 10000000;
+			maxDiff = 0;
+		}
+	};
+	
+	Freq freq20, freq30;
 	
 	void addEvent(int event)
 	{
@@ -139,6 +179,8 @@ public:
 			if(counter1 % (360 * 10) == 0) {
 				maxErr[0] = 0;
 				minErr[0] = 0;
+				freq20.reset();
+				freq30.reset();
 			}
 			
 			if(counter1 % (360 * 300) == 0) {
@@ -165,6 +207,15 @@ public:
 			if(lastEvent != 9) {
 				ADBG("\n10_20_30:lastEvent = %d", lastEvent);
 			}
+			
+			if(event == 20) {
+				freq20.measure(now);
+			}
+			
+			if(event == 30) {
+				freq30.measure(now);
+			}
+			
 		} else if(event == 40) {
 			if(lastEvent != 10) {
 				ADBG("\n40:lastEvent = %d", lastEvent);
@@ -234,13 +285,17 @@ public:
 						"%10.5f - %10.5f usec   "
 						"%10.5f - %10.5f usec   "
 						"%10.5f - %10.5f usec   "
+						"freq20 = [%10.5f - %10.5f] usec  "
+						"freq30 = [%10.5f - %10.5f] usec  "
 						"\n", 
 						counter1, dbCount, counter1 - dbCount, 
 						taxi, lost, heart, missing, doubled, strange,
 						strange140, strange9, strange10_20_30, strange40, strange41,
 						minErr[0] * 1000000, maxErr[0] * 1000000,
 						minErr[1] * 1000000, maxErr[1] * 1000000,
-						minErr[2] * 1000000, maxErr[2] * 1000000
+						minErr[2] * 1000000, maxErr[2] * 1000000,
+						freq20.minDiff * 1000000, freq20.maxDiff * 1000000,
+						freq30.minDiff * 1000000, freq30.maxDiff * 1000000
 				);
 		} else {
 			AMARK(
