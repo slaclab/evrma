@@ -1,0 +1,16 @@
+ Release Notes for the evrma package
+-------------------------------------------
+
+evrma-R1-0-p2: 2015-11-09 S. Gruden
+	* added RELEASE_NOTES
+
+evrma-R1-0-p1: 2015-11-05 S. Gruden
+	* scripts: added README and applied executable permissions, cleanup
+	* testing the frequencies of the events 20 and 30
+	* library bug fix in case the read thread is not launched.
+
+evrma-R1-0: 2015-11-05 S. Gruden
+	* Initial release
+
+
+ 
