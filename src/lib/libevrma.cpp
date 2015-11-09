@@ -131,6 +131,8 @@ void threadReadFunction(void *arg)
  */
 bool checkNotInReadThread(Session *pSession)
 {
+	if(pSession->threadRead == NULL) return true;
+	
 	bool ok = !evrmaThreadCurrentIs(pSession->threadRead);
 	
 	if(!ok) {
