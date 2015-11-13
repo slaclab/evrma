@@ -1,6 +1,10 @@
  Release Notes for the evrma package
 -------------------------------------------
 
+evrma-R1-0-p3: 2015-11-13 S. Gruden
+	* adding multiple allocation of same output test to the automated procedure
+	* more debug code (for event tracing and timing)
+
 evrma-R1-0-p2: 2015-11-09 S. Gruden
 	* added RELEASE_NOTES
 
