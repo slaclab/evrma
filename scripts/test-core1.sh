@@ -112,6 +112,8 @@ echo "---- 1E ---- "
 command_verbose "evrManager /dev/$SIM_MNG_DEV alloc vevrh-pulsgen-test  output 4"
 syfs_res "$X0_1 2 p 2 $VEVR_PULSEGEN_ID $X3_7 8 p 8 $VEVR_PULSEGEN_ID $OUT_X9_"
 
+### allocating the same output again must fail
+command_verbose_must_fail "evrManager /dev/$SIM_MNG_DEV alloc vevrh-pulsgen-test  output 4"
 
 
 echo "---- 1F ---- "
