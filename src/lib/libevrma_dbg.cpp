@@ -18,6 +18,24 @@
 
 // --------- debug only ----------
 
+#ifdef DBG_MEASURE_TIME_FROM_IRQ_TO_USER
+
+static uint64_t get_precise_time(void)
+{	
+	struct timespec tm;
+
+	if (clock_gettime(CLOCK_MONOTONIC, &tm) == -1) {
+		// ups
+		return 0;
+	} else {
+		return ((uint64_t)tm.tv_sec) * 1000000 + (uint32_t)(tm.tv_nsec / 1000);
+	}
+
+}
+
+#endif
+
+
 bool evrmaTest(EvrmaSession session, 
 				   int what)
 {
@@ -112,13 +130,24 @@ void evrmaTimeDebug(int event, void *data, int acceptableLimitUsec,
 	struct evr_data_fifo_event *evData = (struct evr_data_fifo_event *)data;
 
 	enum SpecialEvent {
-		SE_PUT_BUFF = 600,
+		SE_START = 600,
+		SE_PUT_BUFF = SE_START,
 		SE_COPY_TO_USER,
 		SE_USER_START,
 		SE_USER_END,
 		SE_DBUF_READ_TIME,
+		SE_PERIOD_1, // the period of the event1
 		
 		SE_COUNT
+	};
+	
+	const char *seName[] = {
+		"PUTBF",
+		"CP-US",
+		"US_ST",
+		"US_EN",
+		"DB-RD",
+		"PRD-1",
 	};
 		
 	{
@@ -126,6 +155,7 @@ void evrmaTimeDebug(int event, void *data, int acceptableLimitUsec,
 		static uint32_t mint[SE_COUNT];
 		static uint32_t maxt[SE_COUNT];
 		static bool initialized = false;
+		static uint64_t prevTimeEvent1 = 0;
 		
 		static int counter;
 		
@@ -186,6 +216,19 @@ void evrmaTimeDebug(int event, void *data, int acceptableLimitUsec,
 		
 		}
 
+		if(event == 1) {
+			
+			uint64_t timeEvent1 = get_precise_time();
+			
+			val = timeEvent1 - prevTimeEvent1;
+			prevTimeEvent1 = timeEvent1;
+			se = SE_PERIOD_1;
+			
+			if(val > maxt[se]) maxt[se] = val;
+			if(val < mint[se]) mint[se] = val;
+		
+		}
+
 		counter ++;
 		if(counter > 4*4096) {
 			initialized = false;
@@ -194,7 +237,11 @@ void evrmaTimeDebug(int event, void *data, int acceptableLimitUsec,
 				if(maxt[i] > 0) {
 					// only for the existing ones
 					
-					AMARK("{%03d:%5d-%5d}", i, mint[i], maxt[i]);
+					if(i >= SE_START) {
+						AMARK("{%s:%5d-%5d}", seName[i - SE_START], mint[i], maxt[i]);
+					} else {
+						AMARK("{%03d:%5d-%5d}", i, mint[i], maxt[i]);
+					}
 				}
 			}
 			

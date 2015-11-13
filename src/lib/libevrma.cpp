@@ -161,6 +161,12 @@ bool subscribe(EvrmaSession session, int event, uint8_t action)
 	if(!checkNotInReadThread(pSession))
 		return false;
 	
+#ifdef DBG_MEASURE_TIME_FROM_IRQ_TO_USER
+	if(event == 1) {
+		ADBG("\n\n\n                                                ===============> Event %d subscribe action %d\n\n\n", event, action);
+	}
+#endif
+	
 	int ret = ioctl(pSession->fd, VIRT_DEV_IOC_SUBSCRIBE, &subs);
 	
 	if(ret < 0) {
@@ -586,6 +592,10 @@ int evrmaGetSecondsShift(EvrmaSession session, uint32_t *secSh)
 	}
 	
 	*secSh = status.seconds_shift;
+	
+#ifdef DBG_MEASURE_TIME_FROM_IRQ_TO_USER
+	ADBG("\n\n\n\n*****************SecondsShift: %d", status.seconds_shift);
+#endif
 
 	return 0;
 }
