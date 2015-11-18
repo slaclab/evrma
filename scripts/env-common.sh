@@ -3,9 +3,9 @@ export TESTS_DIR=.
 export WRITABLE_TMP_DIR=/home/laci/tmp
 mkdir -p $WRITABLE_TMP_DIR
 
-export EVR_DRIVERS_PATH=/afs/slac/g/lcls/package/linuxKernel_Modules/evrmaDriver/R1-0-p3/buildroot-2014.08-glibc-x86_64
-export EVRMA_PATH=/afs/slac/g/lcls/package/evrma/R1-0-p3/buildroot-2014.08-glibc-x86_64
-export EVR_MANAGER_PATH=/afs/slac/g/lcls/package/evrManager/R1-0-p3/buildroot-2014.08-glibc-x86_64
+export EVR_DRIVERS_PATH=/afs/slac/g/lcls/package/linuxKernel_Modules/evrmaDriver/evrmaDriver-R1-0-p4/buildroot-2014.08-glibc-x86_64
+export EVRMA_PATH=/afs/slac/g/lcls/package/evrma/evrma-R1-0-p4/buildroot-2014.08-glibc-x86_64
+export EVR_MANAGER_PATH=/afs/slac/g/lcls/package/evrManager/evrManager-R1-0-p4/buildroot-2014.08-glibc-x86_64
 
 ### The paths to the EVRMA and EVR_MANAGER may already be set from the boot.
 ### Add new path to the start so it takes precedence.
