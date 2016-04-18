@@ -449,6 +449,9 @@ int evrmaGetTimestampLatch(
 int evrmaGetTemperature(
 		EvrmaSession session,
 		uint32_t *tT);
+int evrmaGetMaxTemperature(
+		EvrmaSession session,
+		uint32_t *tT);
 
 /** 
  * Gets the DataBuf current data.

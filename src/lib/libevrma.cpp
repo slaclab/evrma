@@ -630,6 +630,21 @@ int evrmaGetTemperature(EvrmaSession session, uint32_t *tT)
 	return 0;
 }
 
+int evrmaGetMaxTemperature(EvrmaSession session, uint32_t *tT)
+{
+	Session *pSession = (Session *)session;
+
+	/* This is a safe call for read thread */
+	int ret = ioctl(pSession->fd, VEVR_IOC_AXIXADC_MAXTEMPERATURE_GET, tT);
+
+	if(ret<0) {
+		AERR("evrmaGetMaxTemperature failed, errno=%d", errno);
+		return -1;
+	}
+	
+	return 0;
+}
+
 int evrmaGetSysfsDevice(EvrmaSession session, char *buf, int bufLen)
 {
 	Session *pSession = (Session *)session;
