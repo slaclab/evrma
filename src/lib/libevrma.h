@@ -445,6 +445,11 @@ int evrmaGetTimestampLatch(
 		EvrmaSession session,
 		uint32_t *tLa);
 
+
+int evrmaGetTemperature(
+		EvrmaSession session,
+		uint32_t *tT);
+
 /** 
  * Gets the DataBuf current data.
  * 
