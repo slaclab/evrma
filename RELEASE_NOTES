@@ -1,6 +1,8 @@
  Release Notes for the evrma package
 -------------------------------------------
 
+evrma-R1-0-p6: 2016-04-19 K. Kim
+	* add Temperature monitor for SLAC-EVR
 
 evrma-R1-0-p4: 2015-11-18 S. Gruden
 	* Enabled DBG_MEASURE_TIME_FROM_IRQ_TO_USER.
