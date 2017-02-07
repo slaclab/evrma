@@ -1,7 +1,7 @@
 # Can be overriden by the including Makefile
 XCROSS_HOME ?= 
 
-SRC_LIB_DIR := ../src/lib
+SRC_LIB_DIR := ../../src/lib
 
 CXX=$(XCROSS_HOME)g++
 
