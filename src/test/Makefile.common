@@ -3,7 +3,7 @@ XCROSS_HOME ?=
 
 SRC_TEST_DIR := ../src/test
 
-CC=$(XCROSS_HOME)g++
+CXX=$(XCROSS_HOME)g++
 
 CXXFLAGS := -Wall -fPIC -O3
 CPPFLAGS := -I$(KERNEL_MODULE_EVRMA)/src
