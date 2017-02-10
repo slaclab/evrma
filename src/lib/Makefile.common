@@ -3,14 +3,10 @@ XCROSS_HOME ?=
 
 SRC_LIB_DIR := ../../src/lib
 
-CXX=$(XCROSS_HOME)gcc
+CXX=$(XCROSS_HOME)g++
 
-# The linker is not happy with "-fPIC"
-#CXXFLAGS := -Wall -fPIC -O3
-CXXFLAGS := -Wall -O3
+CXXFLAGS := -Wall -fPIC -O3
 
-# Need this because of GCC 5.X 
-CPPFLAGS := -D_GLIBCXX_USE_CXX11_ABI=0
 CPPFLAGS += -I$(KERNEL_MODULE_EVRMA)/src
 CPPFLAGS += -I$(SRC_LIB_DIR)
 
@@ -35,8 +31,8 @@ all:	$(LIBRARY)
 
 # Build libevrma.a from SRC files
 $(LIBRARY): $(patsubst %.cpp,%.o,$(SRC))
-	ar ru $@ $^
-	ranlib $@
+	$(XCROSS_HOME)ar ru $@ $^
+	$(XCROSS_HOME)ranlib $@
 	
 .PHONY:	install
 install: all

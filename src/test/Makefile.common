@@ -3,15 +3,11 @@ XCROSS_HOME ?=
 
 SRC_TEST_DIR := ../../src/test
 
-CXX=$(XCROSS_HOME)gcc
+CXX=$(XCROSS_HOME)g++
 
-# The linker is not happy with "-fPIC"
-#CXXFLAGS := -Wall -fPIC -O3 
-CXXFLAGS := -Wall -O3
+CXXFLAGS := -Wall -fPIC -O3 
 
-# Need this because of GCC 5.X
-CPPFLAGS := -D_GLIBCXX_USE_CXX11_ABI=0
-CPPFLAGS += -I$(KERNEL_MODULE_EVRMA)/src
+CPPFLAGS := -I$(KERNEL_MODULE_EVRMA)/src
 CPPFLAGS += -I$(EVRMA)/include
 CPPFLAGS += -I$(SRC_TEST_DIR)
 
@@ -35,15 +31,15 @@ INSTALL_BIN_DIR  = bin
 all:	$(VDEV_TEST1) $(VDEV_TEST2) $(TEST_API)
 
 $(VDEV_TEST1): $(patsubst %.cpp,%.o,$(SRC_TEST1))
-	@$(CC) $(patsubst %.cpp,%.o,$(SRC_TEST1)) $(LDFLAGS) $(LDLIBS) -o $(VDEV_TEST1)
+	@$(CXX) $(patsubst %.cpp,%.o,$(SRC_TEST1)) $(LDFLAGS) $(LDLIBS) -o $(VDEV_TEST1)
 	@echo "  LD   " $@
 
 $(VDEV_TEST2): $(patsubst %.cpp,%.o,$(SRC_TEST2))
-	@$(CC) $(patsubst %.cpp,%.o,$(SRC_TEST2)) $(LDFLAGS) $(LDLIBS) -o $(VDEV_TEST2)
+	@$(CXX) $(patsubst %.cpp,%.o,$(SRC_TEST2)) $(LDFLAGS) $(LDLIBS) -o $(VDEV_TEST2)
 	@echo "  LD   " $@
 
 $(TEST_API): $(patsubst %.cpp,%.o,$(SRC_API))
-	@$(CC) $(patsubst %.cpp,%.o,$(SRC_API)) $(LDFLAGS) $(LDLIBS) -o $(TEST_API)
+	@$(CXX) $(patsubst %.cpp,%.o,$(SRC_API)) $(LDFLAGS) $(LDLIBS) -o $(TEST_API)
 	@echo "  LD   " $@
 
 
