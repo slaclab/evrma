@@ -1,5 +1,11 @@
  Release Notes for the evrma package
 -------------------------------------------
+R1.0.7:  Feb. 7, 2017, Ernest Williams (ernesto)
+         * Refactor the build to be more consistent with 
+           non-EPICS package builds.
+         * Fix Makefile to use correct compiler:
+           Define "CXX" instead of "CC"
+         * Make changes to support the new GCC 5.4
 
 evrma-R1-0-p6: 2016-04-19 K. Kim
 	* add Temperature monitor for SLAC-EVR

@@ -5,7 +5,7 @@ BUILDROOT_X86_HOME=/afs/slac/package/linuxRT/buildroot-2016.11.1
 # Location CrossCompiler HOME for linuxRT x86_64 targets (glibc)
 XCROSS_HOME=$(BUILDROOT_X86_HOME)/host/linux-x86_64/x86_64/usr/bin/x86_64-buildroot-linux-gnu-
 
-include ../src/test/Makefile.common
+include ../../src/test/Makefile.common
 
 
 

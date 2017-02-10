@@ -3,10 +3,15 @@ XCROSS_HOME ?=
 
 SRC_LIB_DIR := ../../src/lib
 
-CXX=$(XCROSS_HOME)g++
+CXX=$(XCROSS_HOME)gcc
 
-CXXFLAGS := -Wall -fPIC -O3
-CPPFLAGS := -I$(KERNEL_MODULE_EVRMA)/src
+# The linker is not happy with "-fPIC"
+#CXXFLAGS := -Wall -fPIC -O3
+CXXFLAGS := -Wall -O3
+
+# Need this because of GCC 5.X 
+CPPFLAGS := -D_GLIBCXX_USE_CXX11_ABI=0
+CPPFLAGS += -I$(KERNEL_MODULE_EVRMA)/src
 CPPFLAGS += -I$(SRC_LIB_DIR)
 
 LDFLAGS +=  -L.
