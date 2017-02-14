@@ -1,5 +1,4 @@
 ### NOTE: SETTABLE_CONFIG
-KERNEL_MODULE_EVRMA ?= /afs/slac/g/lcls/package/linuxKernel_Modules/evrmaDriver/evrmaDriver-R1-0-p6
 
 .PHONY:	all
 all: compile_lib install_lib compile_test
