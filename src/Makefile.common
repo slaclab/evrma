@@ -1,5 +1,7 @@
 ### NOTE: SETTABLE_CONFIG
 
+PACKAGE_TOP?=$(EPICS_PACKAGE_TOP)
+
 .PHONY:	all
 all: compile_lib install_lib compile_test
 
