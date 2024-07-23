@@ -2,6 +2,8 @@
 
 PACKAGE_TOP?=$(EPICS_PACKAGE_TOP)
 
+EVRMA_DRIVER_VERSION=R1.0.12
+
 .PHONY:	all
 all: compile_lib install_lib compile_test
 
