@@ -1,17 +1,32 @@
-Editing
-=========
-
-The following variables should or can be changed to match your system configuration:
-
-- KERNEL_MODULE_EVRMA in Makefile.common at src/ should point
-  to the evrmaDriver directory.
-  
-- INSTALL_LOCATION in Makefile at build-buildroot-2014.08-x86_64 and
-  build-rhel6-linux-x86_64 define the path where the installed files will reside.
-  
 Building
-==========
+========
+
+Ensure that PACKAGE_SITE_TOP or EPICS_PACKAGE_TOP are set in your environment or on the command line.
 
 Change dir to build-xxx and type (target = all, clean, install, uninstall):
 
 	make [target]
+
+
+Editing
+=======
+
+The following variables should or can be changed to match your target configuration:
+
+- KERNEL_MODULE_EVRMA in Makefile.common at src/ should point
+  to the evrmaDriver directory.
+  
+- INSTALL_LOCATION in Makefile at build/buildroot-*-x86_64, and 
+  build/rhel*-x86_64 define the path where the installed files will reside.
+
+
+Adding a New Target
+===================
+
+1. Create build/<target name>, where <target name> is typically in the format OS-ARCH (i.e. rhel9-x86_64)
+2. Copy Makefile, Makefile.lib and Makefile.test from build/rhel9-x86_64 to your new build directory
+3. Modify Makefile to adjust INSTALL_LOCATION to point at the correct target directory
+   3a. Modify KERNEL_MODULE_EVRMA to point at the correct directory, too
+4. Build!
+  
+
