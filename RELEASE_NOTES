@@ -1,5 +1,11 @@
  Release Notes for the evrma package
 -------------------------------------------
+R1.0.12  Feb 06, 2025, Jeremy Lorelli (lorelli)
+         * build against evrmaDriver R1.0.12
+		 * Add rhel9-x86_64 target
+		 * Remove hardcoded paths
+		 * Update building instructions
+
 R1.0.10  Mar 09, 2021, Kukhee Kim (khkim)
          * build aginst evrmaDriver R1.0.10
          * support rhel7-x86_64
